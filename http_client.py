@@ -29,7 +29,6 @@ class MyThread(threading.Thread):
         self.counter = counter
 
     def run(self):
-        
         print("Starting " + self.name + str(self.counter))
         workload(self.name + str(self.counter))
 
