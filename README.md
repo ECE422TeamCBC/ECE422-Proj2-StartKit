@@ -23,7 +23,7 @@ Note: You may require prefixing most commands with “sudo” depending on if th
     ```
 4. Initialize any number of client connections to the running server application, and explore all the various microservices. This can run on the Client VM with the original http_client.py:
     ```bash
-        python3 http_client.py <no users> <wait time>
+        python3 http_client.py <swarm_manager_ip> <no users> <wait time>
     ```
     4a. Or with Locust:
     ```bash
