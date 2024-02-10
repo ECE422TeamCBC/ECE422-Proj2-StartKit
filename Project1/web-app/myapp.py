@@ -1,6 +1,6 @@
 
 """
-A simple web application; return the number of time it has been visited and also the amount of time that took to
+A simple web application (modified); return the number of times it has been visited, and also the amount of time that took to
 run the difficult function.
 """
 
