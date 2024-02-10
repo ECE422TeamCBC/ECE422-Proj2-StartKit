@@ -6,16 +6,21 @@ run the difficult function.
 
 from flask import Flask, request
 import subprocess
+from redis import Redis
 
 app = Flask(__name__)
+redis = Redis(host='redis', port=6379)
+redis.incr("num_replicas")
 
 @app.route('/scaleup', methods=['POST'])
 def scale():
+    redis.incr("num_replicas")
     subprocess.run(["bash", "./scale.sh", "app_name_web", "scaleup"])
     return '', 200
 
 @app.route('/scaledown', methods=['POST'])
 def scale_down():
+    redis.decr("num_replicas")
     subprocess.run(["bash", "./scale.sh", "app_name_web", "scaledown"])
     return '', 200
 

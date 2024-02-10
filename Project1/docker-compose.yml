@@ -6,6 +6,13 @@ volumes:
   grafana-data:
     driver: local
 
+networks:
+  custome-overlay:
+    driver: overlay
+    attachable: true
+  second-overlay:
+    driver: overlay
+
 services:
 
   web:
@@ -17,6 +24,10 @@ services:
         limits:
           cpus: '0.25'
           memory: 256M
+    networks:
+      - custome-overlay
+      - default
+
   redis:
     image: redis/redis-stack-server:latest
     ports:
@@ -49,6 +60,9 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
+    networks:
+      - custome-overlay
+      - default
 
   grafana:
     image: grafana/grafana:latest
@@ -92,29 +106,47 @@ services:
       placement:
         constraints: [node.role == manager]
 
-  node_exporter:
-    image: prom/node-exporter:latest
-    ports:
-      - 9100:9100
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.sysfs=/host/sys'
-      - '--path.rootfs=/rootfs'
-    deploy:
-      mode: global
+  # node_exporter:
+  #   image: prom/node-exporter:latest
+  #   ports:
+  #     - 9100:9100
+  #   volumes:
+  #     - /proc:/host/proc:ro
+  #     - /sys:/host/sys:ro
+  #     - /:/rootfs:ro
+  #   command:
+  #     - '--path.procfs=/host/proc'
+  #     - '--path.sysfs=/host/sys'
+  #     - '--path.rootfs=/rootfs'
+  #   deploy:
+  #     mode: global
 
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor
-    ports:
-      - 8080:8080
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    deploy:
-      mode: global
+  # cadvisor:
+  #   image: gcr.io/cadvisor/cadvisor
+  #   ports:
+  #     - 8080:8080
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:rw
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+  #   deploy:
+  #     mode: global
+
+  # dockerd_exporter:
+  #   image: stefanprodan/swarmprom-dockerd-exporter
+  #   command: -dockerd.endpoint unix:///var/run/docker.sock
+  #   environment:
+  #     - IN=172.18.0.1:9323
+  #     - OUT=9323
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   deploy:
+  #     mode: global
+  #     resources:
+  #       limits:
+  #         cpus: '0.1'
+  #         memory: 64M
+  #   networks:
+  #     - custome-overlay
+  #     - default
