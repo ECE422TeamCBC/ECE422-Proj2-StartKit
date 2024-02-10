@@ -1,19 +1,4 @@
-ECE 422: Reliable and Secure Systems Design, Project 1 Part 2,
-by Carl Fang, Calvin Choi, Brandon Hoynick
-Modified Instructions for AutoScaling Docker system to support simpleweb app:
-(The original starter kit instructions are at the bottom of this readme).
-=============
-The Design folder contains: 
-- A high-level architectural view of application auto-scalability features.
-- A state diagram that shows the state, events, and actions in the auto-scaler.
-- The pseudocode of the auto-scaling algorithm along with reasons behind the parameter settings in the algorithm.
-
-
-
-
-
-=============
-Original Starter Kit Instructions by  Zhijie Wang
+ECE 422: Reliable and Secure Systems Design 
 =============
 This repository provides the starter kit for the Reliability project. The `docker-images` folder
 contains the Dockerfile, a simple application in `Python` and a requirement file including dependencies for
