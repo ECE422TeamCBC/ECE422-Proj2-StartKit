@@ -49,13 +49,13 @@ def hello():
 
     request_sum = float(redis.get('request_time_sum'))
     request_count = int(redis.get('request_count'))
-    if request_count >= 15:
+    if request_count >= 10:
         avg_request_time = request_sum / float(request_count)
-        if avg_request_time > 5.0:
+        if avg_request_time > 7.0:
             redis.set('request_time_sum', 0)
             redis.set('request_count', 0)
             requests.post(url="http://10.2.7.109:5001/scaleup")
-        elif avg_request_time < 2.0:
+        elif avg_request_time < 4.0:
             redis.set('request_time_sum', 0)
             redis.set('request_count', 0)
             requests.post(url="http://10.2.7.109:5001/scaledown")
