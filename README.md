@@ -25,10 +25,11 @@ Note: You may require prefixing most commands with “sudo” depending on if th
     ```bash
         python3 http_client.py <no users> <wait time>
     ```
-Or with Locust:
+    4a. Or with Locust:
     ```bash
         locust -f locustfile.py
     ```
+
 (locust prompts to open http://localhost:8089 to see the Locust dashboard, where you can start the swarm and view the “Total Request per second”, the “Response Times (ms)”, and “Number of Users” ).
 5. View on various monitoring systems the different available charts (Locust, Grafana on localhost:3000 for retrieving Redis database data, and Prometheus web scraper).
 6. You should observe the autoscaler receive web statistical data which will check if response times are too high and tell Docker to scale up the amount of apps, or that response times are dropping to normal rates, so after a period tell Docker to scale down the amount of web apps.
