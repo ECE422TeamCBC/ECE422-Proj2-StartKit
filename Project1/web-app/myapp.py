@@ -8,31 +8,19 @@ from flask import Flask, request, g, Response
 from redis import Redis
 import random
 import time
-from prometheus_client import Histogram, Summary, generate_latest
+import requests
 
 app = Flask(__name__)
-redis = Redis(host='redis', port=6379)
 
-# Create a histogram metric to track response times
-REQUEST_TIME = Histogram('request_processing_seconds', 'Time spent processing request')
-SUMMARY_TIME = Summary('request_latency', 'Latency of request')
+redis = Redis(host='redis', port=6379, decode_responses=True)
+# redis = Redis(host='10.2.7.109', port=6379)
+list_key = 'timearray'
+# startt
 
 @app.before_request
 def start_timer():
+    # global start
     g.start = time.time()
-
-# @app.after_request
-# def log_response(response):
-#     # now = time.time()
-#     # duration = round(now - g.start, 2)
-#     # REQUEST_TIME.observe(duration)  # Record to the histogram
-#     return response
-
-@app.route('/metrics')
-def metrics():
-    # Generate latest metric data
-    content = generate_latest()
-    return Response(content, mimetype='text/plain')
 
 def difficult_function():
     output = 1
@@ -47,11 +35,32 @@ def difficult_function():
 
 @app.route('/')
 def hello():
+    # global startt
+    start = time.time()
+    redis.set('hits133', random.randint(1, 100))
     count = redis.incr('hits')
     computation_time = difficult_function()
     end = time.time()
-    REQUEST_TIME.observe(end - g.start)  # Record to the histogram
-    SUMMARY_TIME.observe(end - g.start)
+    # responsetime = end - startt
+    # redis.rpush('timearray', random.randint(1, 100))
+    # redis.zadd('timearray', {end: end})  # Sorted Set for timestamps
+    redis.incr('request_count')
+    redis.incrbyfloat('request_time_sum', (end - start))
+
+    request_sum = float(redis.get('request_time_sum'))
+    request_count = int(redis.get('request_count'))
+    if request_count >= 15:
+        avg_request_time = request_sum / float(request_count)
+        if avg_request_time > 5.0:
+            redis.set('request_time_sum', 0)
+            redis.set('request_count', 0)
+            requests.post(url="http://10.2.7.109:5001/scaleup")
+        elif avg_request_time < 2.0:
+            redis.set('request_time_sum', 0)
+            redis.set('request_count', 0)
+            requests.post(url="http://10.2.7.109:5001/scaledown")
+
+    redis.hset('datahash', 1, (end - g.start))  # Hash for values
     return 'Hello There! I have been seen {} times. I have solved the problem in {} seconds.\n'.format(count,
                                                                                                        computation_time)
 
