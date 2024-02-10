@@ -1,0 +1,20 @@
+Auto-Scaling Algorithm Pseudocode
+The actual high-level algorithm for the auto scaler is relatively simple. It essentially boils down to:
+(Given upper threshold X and lower threshold Y)
+if response_time > X: 
+	scale_up()
+else if response_time < Y:
+	scale_down()
+
+As for the scale_up() and scale_down() functionality, the logic is simple as well. Upwards scaling increments the number of replicas by one:
+def scale_up():
+	replicas++
+
+As for downward scaling, it decrements the replicas by one, but maintains a replica minimum of 1 existing replica.
+def scale_down():
+	if (replicas > 1):
+		replicas--
+
+In order to implement a more robust scaling policy, this logic is handled by our Prometheus alert manager. When abnormally high or low average response times are detected, an alert is fired off and handled by the manager. After scaling up or down, the alert state is maintained until conditions to escape it are met, thus scaling upwards and downwards faster when conditions are far from being met.
+
+As for the specific parameters we chose, we measured average response time in seconds. We took a lower threshold of 1 seconds and an upper threshold of 3 seconds. This was based mainly on manual testing for varying client workloads providing average response times from the given client that processes a difficult function. The bounds were also selected to be 2 seconds apart, as to compensate for the natural hills and troughs of a stable set of response times. We found through testing that this was a comfortable threshold gap. The average monitoring interval (refresh rate) is 15s.
