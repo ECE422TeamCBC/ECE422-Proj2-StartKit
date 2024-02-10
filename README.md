@@ -7,6 +7,9 @@ The Design folder contains:
 - A high-level architectural view of application auto-scalability features.
 - A state diagram that shows the state, events, and actions in the auto-scaler.
 - The pseudocode of the auto-scaling algorithm along with reasons behind the parameter settings in the algorithm.
+Our server side elements are located within the ‘Project1’ folder (which contains all microservice help apps for the web app serving system).
+The ‘original-kit’ folder contains items from the starter kit (not used, just kept for the original reference).
+The ‘ClientVM’ folder contains client simulator elements used in our project.
 
 
 
