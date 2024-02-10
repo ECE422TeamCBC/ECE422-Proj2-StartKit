@@ -36,7 +36,7 @@ Note: You may require prefixing most commands with “sudo” depending on if th
 
 6. You should observe the autoscaler receive web statistical data which will check if response times are too high and tell Docker to scale up the amount of apps, or that response times are dropping to normal rates, so after a period tell Docker to scale down the amount of web apps.
 
-
+----------------------------------------------------------------------------------------------------------------------------------------------
 Our server side elements are located within the ‘Project1’ folder (which contains all microservice help apps for the web app serving system).
 
 The ‘original-kit’ folder contains items from the starter kit (not used, just kept for the original reference).
